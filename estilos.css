@@ -1,0 +1,201 @@
+/* ==========================================================================
+   1. CONFIGURACIÓN GENERAL Y VARIABLES DE COLOR
+   ========================================================================== */
+:root {
+    --color-principal-rojo: #E31A1A;   /* Rojo del logo */
+    --color-secundario-verde: #008A4B; /* Verde del logo */
+    --color-acento-amarillo: #FFD400;  /* Amarillo del logo */
+    --color-fondo-gris: #F9F9F9;       /* Fondo suave para la web */
+    --color-texto-oscuro: #333333;     /* Texto legible */
+    --fuente-principal: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-principal);
+    background-color: var(--color-fondo-gris);
+    color: var(--color-texto-oscuro);
+    line-height: 1.6;
+}
+
+/* ==========================================================================
+   2. CABECERA (HEADER) Y NAVEGACIÓN
+   ========================================================================== */
+header {
+    background-color: #FFFFFF;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 15px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.logo h1 {
+    color: var(--color-principal-rojo);
+    font-size: 24px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 3px solid var(--color-acento-amarillo);
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: var(--color-texto-oscuro);
+    font-weight: 600;
+    font-size: 15px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+/* Efecto al pasar el mouse por el menú */
+nav ul li a:hover {
+    color: #FFFFFF;
+    background-color: var(--color-secundario-verde);
+}
+
+/* Botón del Carrito */
+.carrito-compras button {
+    background-color: var(--color-principal-rojo);
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+.carrito-compras button:hover {
+    background-color: #B51212;
+    transform: scale(1.05);
+}
+
+/* ==========================================================================
+   3. SECCIONES Y CONTENEDOR DE PRODUCTOS (GRID)
+   ========================================================================== */
+main {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+section {
+    margin-bottom: 50px;
+    scroll-margin-top: 100px; /* Evita que el menú fijo tape el título al hacer clic */
+}
+
+section h2 {
+    color: var(--color-secundario-verde);
+    font-size: 22px;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+/* Línea decorativa verde debajo de cada título de categoría */
+section h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background-color: var(--color-acento-amarillo);
+    border-radius: 2px;
+}
+
+/* Rejilla inteligente que se adapta sola al tamaño de pantalla */
+.grid-productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+/* ==========================================================================
+   4. TARJETA DE PRODUCTO INDIVIDUAL (CARD)
+   ========================================================================== */
+.item-producto {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+    border: 1px solid #EEEEEE;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.item-producto:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.item-producto h3 {
+    font-size: 17px;
+    color: #222222;
+    margin-bottom: 8px;
+}
+
+.item-producto p {
+    font-size: 14px;
+    color: #666666;
+    margin-bottom: 15px;
+}
+
+/* Estilo para el precio destacado */
+.item-producto .precio {
+    font-size: 20px;
+    color: var(--color-secundario-verde);
+    font-weight: 700;
+    margin-top: auto; /* Empuja el precio y botón al fondo de la tarjeta */
+    margin-bottom: 15px;
+}
+
+/* Botón de agregar de la tarjeta */
+.item-producto button {
+    background-color: transparent;
+    color: var(--color-principal-rojo);
+    border: 2px solid var(--color-principal-rojo);
+    padding: 10px;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.item-producto button:hover {
+    background-color: var(--color-principal-rojo);
+    color: #FFFFFF;
+}
+
+/* ==========================================================================
+   5. PIE DE PÁGINA (FOOTER)
+   ========================================================================== */
+footer {
+    background-color: var(--color-secundario-verde);
+    color: #FFFFFF;
+    text-align: center;
+    padding: 25px;
+    margin-top: 50px;
+    font-size: 14px;
+}
