@@ -180,7 +180,7 @@
                     <button type="button" class="btn-agregar">Agregar al carrito</button>
                 </article>
                 <article class="item-producto">
-                    <img src="imagenes/yogurt-lucuma_800px.jpg" alt="Yogurt Frutado de Lúcuma" class="img-producto">
+                    <img src="imagenes/yogurt-lucuma_1000px.jpg" alt="Yogurt Frutado de Lúcuma" class="img-producto">
                     <h3>Yogurt Frutado de Lúcuma</h3>
                     <p class="precio">S/. 15.00</p>
                     <div class="control-cantidad">
@@ -534,6 +534,20 @@
         </div>
         <div id="lista-productos-modal">
             </div>
+        
+        <div class="opciones-entrega">
+            <p><strong>Tipo de entrega:</strong></p>
+            <label>
+                <input type="radio" name="tipo-entrega" value="Delivery" checked> 🛵 Delivery
+            </label>
+            <label>
+                <input type="radio" name="tipo-entrega" value="Recojo en tienda"> 🏪 Recojo en tienda
+            </label>
+            
+            <div id="campo-direccion" class="oculto">
+                <input type="text" id="direccion-delivery" placeholder="Escribe tu dirección exacta y referencia..." class="input-direccion">
+            </div>
+        </div>
         <div class="footer-modal">
             <h3 class="total-texto">Total a Pagar: <span id="total-modal">S/. 0.00</span></h3>
             <button id="btn-confirmar-compra">Proceder al pago</button>

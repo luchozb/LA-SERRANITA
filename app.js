@@ -187,7 +187,7 @@ if(btnCerrarModal) btnCerrarModal.addEventListener('click', cerrarVentanaCarrito
 if(overlayModal) overlayModal.addEventListener('click', cerrarVentanaCarrito);
 
 // ==========================================================
-// 6. ENVIAR PEDIDO A WHATSAPP
+// 6. ENVIAR PEDIDO A WHATSAPP (ACTUALIZADO CON TIPO DE ENTREGA)
 // ==========================================================
 if(btnConfirmarCompra) {
     btnConfirmarCompra.addEventListener('click', () => {
@@ -195,6 +195,10 @@ if(btnConfirmarCompra) {
             mostrarNotificacion("⚠️ Tu carrito está vacío. ¡Agrega productos primero!");
             return;
         }
+
+        // 1. Capturamos el tipo de entrega seleccionado
+        const inputEntrega = document.querySelector('input[name="tipo-entrega"]:checked');
+        const metodoEntrega = inputEntrega ? inputEntrega.value : "No especificado";
 
         let mensaje = "*¡Hola La Serranita!* 👋\nQuiero realizar el siguiente pedido:\n\n";
         let total = 0;
@@ -205,7 +209,11 @@ if(btnConfirmarCompra) {
             mensaje += `🔸 *${producto.cantidad}x* ${producto.nombre} - S/. ${subtotal.toFixed(2)}\n`;
         });
 
-        mensaje += `\n*Total a pagar: S/. ${total.toFixed(2)}*\n\n`;
+        mensaje += `\n*Total a pagar: S/. ${total.toFixed(2)}*\n`;
+        
+        // 2. Agregamos el método de entrega al mensaje
+        mensaje += `*Método de entrega:* ${metodoEntrega}\n\n`;
+        
         mensaje += "Por favor, confírmenme el pedido y cómo realizo el pago. ¡Gracias!";
 
         const numeroWhatsApp = "51964970065"; 
