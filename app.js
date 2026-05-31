@@ -10,14 +10,14 @@ const overlayModal = document.getElementById('overlay-modal');
 const btnCerrarModal = document.getElementById('btn-cerrar-modal');
 const listaProductosModal = document.getElementById('lista-productos-modal');
 const totalModal = document.getElementById('total-modal');
+const btnConfirmarCompra = document.getElementById('btn-confirmar-compra'); // Nuevo botón WhatsApp
 
 // ==========================================================
-// 2. LÓGICA DE LOS BOTONES + / - Y "AGREGAR AL CARRITO"
+// 2. LÓGICA DE LOS BOTONES + / - Y "AGREGAR AL CARRITO" (Página Principal)
 // ==========================================================
 const productosUI = document.querySelectorAll('.item-producto');
 
 productosUI.forEach(producto => {
-    // Para cada producto, identificamos sus botones internos
     const btnRestar = producto.querySelector('.btn-restar');
     const btnSumar = producto.querySelector('.btn-sumar');
     const inputCantidad = producto.querySelector('.input-cantidad');
@@ -50,19 +50,14 @@ productosUI.forEach(producto => {
                 const titulo = producto.querySelector('h3').innerText;
                 const precioTexto = producto.querySelector('.precio').innerText;
                 
-                // Buscamos específicamente el patrón de un número (con o sin decimales)
-                // Esto ignora el punto engañoso del "S/."
                 const coincidencia = precioTexto.match(/\d+(\.\d+)?/);
                 const precio = coincidencia ? parseFloat(coincidencia[0]) : 0;
                 
                 procesarCarrito(titulo, precio, cantidadElegida);
                 
                 inputCantidad.value = 0;
-                
-                // --- AQUÍ LLAMAMOS A LA NUEVA NOTIFICACIÓN DE ÉXITO ---
                 mostrarNotificacion(`✅ ¡Agregaste ${cantidadElegida} x ${titulo} al carrito!`);
             } else {
-                // --- AQUÍ LLAMAMOS A LA NOTIFICACIÓN DE ADVERTENCIA ---
                 mostrarNotificacion(`⚠️ Usa el botón '+' para elegir la cantidad.`);
             }
         });
@@ -70,7 +65,7 @@ productosUI.forEach(producto => {
 });
 
 // ==========================================================
-// 3. FUNCIONES DE CÁLCULO DEL CARRITO
+// 3. FUNCIONES DE CÁLCULO Y RENDERIZADO DEL CARRITO
 // ==========================================================
 function procesarCarrito(nombre, precio, cantidad) {
     const productoExistente = carrito.find(item => item.nombre === nombre);
@@ -96,18 +91,25 @@ function actualizarInterfaz() {
 
     carrito.forEach((item) => {
         totalCantidadProductos += item.cantidad;
-        totalDinero += (item.precio * item.cantidad);
+        const subtotal = item.precio * item.cantidad;
+        totalDinero += subtotal;
 
+        // Aquí dibujamos el HTML usando las clases CSS que agregamos antes
         const itemHTML = document.createElement('div');
+        itemHTML.className = 'item-carrito-modal';
         itemHTML.innerHTML = `
-            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #eee; padding-bottom: 8px;">
-                <div>
-                    <strong>${item.nombre}</strong><br>
-                    <span style="color: #666; font-size: 14px;">S/. ${item.precio.toFixed(2)} x ${item.cantidad} uni.</span>
-                </div>
-                <div style="font-weight: bold; color: #008A4B; font-size: 16px;">
-                    S/. ${(item.precio * item.cantidad).toFixed(2)}
-                </div>
+            <div class="info-producto-carrito">
+                <h4>${item.nombre}</h4>
+                <p>S/. ${item.precio.toFixed(2)} c/u</p>
+            </div>
+            <div class="controles-carrito">
+                <button class="btn-restar-carrito" data-nombre="${item.nombre}">-</button>
+                <span class="cantidad-carrito">${item.cantidad}</span>
+                <button class="btn-sumar-carrito" data-nombre="${item.nombre}">+</button>
+                <button class="btn-eliminar-carrito" data-nombre="${item.nombre}">🗑️</button>
+            </div>
+            <div class="subtotal-carrito">
+                S/. ${subtotal.toFixed(2)}
             </div>
         `;
         listaProductosModal.appendChild(itemHTML);
@@ -115,10 +117,59 @@ function actualizarInterfaz() {
 
     if(btnAbrirCarrito) btnAbrirCarrito.innerText = `🛒 Mi Carrito (${totalCantidadProductos})`;
     if(totalModal) totalModal.innerText = `S/. ${totalDinero.toFixed(2)}`;
+
+    // MUY IMPORTANTE: Le damos "vida" a los nuevos botones que acabamos de crear
+    asignarEventosModal();
 }
 
 // ==========================================================
-// 4. LÓGICA PARA ABRIR Y CERRAR LA VENTANA MODAL
+// 4. LÓGICA DE LOS BOTONES INTERNOS DEL CARRITO (+, -, 🗑️)
+// ==========================================================
+function asignarEventosModal() {
+    // Botón Sumar en modal
+    document.querySelectorAll('.btn-sumar-carrito').forEach(boton => {
+        boton.addEventListener('click', (e) => {
+            const nombre = e.target.getAttribute('data-nombre');
+            const producto = carrito.find(item => item.nombre === nombre);
+            if(producto) producto.cantidad++;
+            actualizarInterfaz();
+        });
+    });
+
+    // Botón Restar en modal
+    document.querySelectorAll('.btn-restar-carrito').forEach(boton => {
+        boton.addEventListener('click', (e) => {
+            const nombre = e.target.getAttribute('data-nombre');
+            const producto = carrito.find(item => item.nombre === nombre);
+            if(producto) {
+                if (producto.cantidad > 1) {
+                    producto.cantidad--;
+                    actualizarInterfaz();
+                } else {
+                    eliminarDelCarrito(nombre); // Si es 1 y resta, se elimina
+                }
+            }
+        });
+    });
+
+    // Botón Eliminar (Basurero)
+    document.querySelectorAll('.btn-eliminar-carrito').forEach(boton => {
+        boton.addEventListener('click', (e) => {
+            const nombre = e.target.getAttribute('data-nombre');
+            eliminarDelCarrito(nombre);
+        });
+    });
+}
+
+function eliminarDelCarrito(nombre) {
+    // Filtramos dejando todos excepto el que queremos eliminar
+    carrito = carrito.filter(item => item.nombre !== nombre);
+    actualizarInterfaz();
+    mostrarNotificacion(`🗑️ Eliminaste ${nombre} del carrito.`);
+}
+
+// ==========================================================
+// 5. LÓGICA PARA ABRIR Y CERRAR LA VENTANA MODAL
 // ==========================================================
 if(btnAbrirCarrito) {
     btnAbrirCarrito.addEventListener('click', () => {
@@ -136,10 +187,38 @@ if(btnCerrarModal) btnCerrarModal.addEventListener('click', cerrarVentanaCarrito
 if(overlayModal) overlayModal.addEventListener('click', cerrarVentanaCarrito);
 
 // ==========================================================
-// 5. NOTIFICACIONES FLOTANTES (TOAST)
+// 6. ENVIAR PEDIDO A WHATSAPP
+// ==========================================================
+if(btnConfirmarCompra) {
+    btnConfirmarCompra.addEventListener('click', () => {
+        if (carrito.length === 0) {
+            mostrarNotificacion("⚠️ Tu carrito está vacío. ¡Agrega productos primero!");
+            return;
+        }
+
+        let mensaje = "*¡Hola La Serranita!* 👋\nQuiero realizar el siguiente pedido:\n\n";
+        let total = 0;
+
+        carrito.forEach(producto => {
+            const subtotal = producto.cantidad * producto.precio;
+            total += subtotal;
+            mensaje += `🔸 *${producto.cantidad}x* ${producto.nombre} - S/. ${subtotal.toFixed(2)}\n`;
+        });
+
+        mensaje += `\n*Total a pagar: S/. ${total.toFixed(2)}*\n\n`;
+        mensaje += "Por favor, confírmenme el pedido y cómo realizo el pago. ¡Gracias!";
+
+        const numeroWhatsApp = "51964970065"; 
+        const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+        
+        window.open(urlWhatsApp, '_blank');
+    });
+}
+
+// ==========================================================
+// 7. NOTIFICACIONES FLOTANTES (TOAST)
 // ==========================================================
 function mostrarNotificacion(mensaje) {
-    // 1. Buscamos si ya existe el contenedor de notificaciones, si no, lo creamos
     let contenedor = document.getElementById('toast-container');
     if (!contenedor) {
         contenedor = document.createElement('div');
@@ -148,15 +227,12 @@ function mostrarNotificacion(mensaje) {
         document.body.appendChild(contenedor);
     }
 
-    // 2. Creamos la notificación (toast)
     const toast = document.createElement('div');
     toast.className = 'toast';
-    toast.innerHTML = mensaje; // El emoji y el texto vienen en la variable 'mensaje'
+    toast.innerHTML = mensaje; 
 
-    // 3. Agregamos el toast al contenedor
     contenedor.appendChild(toast);
 
-    // 4. Lo eliminamos del código después de 3 segundos (cuando termina la animación)
     setTimeout(() => {
         toast.remove();
     }, 3000);

@@ -275,7 +275,6 @@ footer {
     font-size: 15px;
 }
 
-/* Estilos de la nueva sección de redes sociales */
 .redes-sociales {
     display: flex;
     justify-content: center;
@@ -290,30 +289,20 @@ footer {
     font-weight: bold;
     font-size: 16px;
     padding: 12px 25px;
-    border-radius: 30px; /* Diseño en forma de botón redondeado */
+    border-radius: 30px; 
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     align-items: center;
 }
 
-/* Colores oficiales de las marcas */
-.red-whatsapp {
-    background-color: #25D366; 
-}
+.red-whatsapp { background-color: #25D366; }
+.red-facebook { background-color: #1877F2; }
+.red-tiktok { background-color: #000000; }
 
-.red-facebook {
-    background-color: #1877F2; 
-}
-
-.red-tiktok {
-    background-color: #000000; 
-}
-
-/* Efecto al pasar el mouse por encima de las redes */
 .redes-sociales a:hover {
-    transform: translateY(-5px); /* Se levantan un poquito */
-    box-shadow: 0 8px 15px rgba(0,0,0,0.3); /* Sombra más fuerte */
+    transform: translateY(-5px); 
+    box-shadow: 0 8px 15px rgba(0,0,0,0.3); 
 }
 
 /* ==========================================================================
@@ -384,6 +373,73 @@ footer {
     margin-bottom: 20px;
 }
 
+/* --- ESTILOS DE LOS PRODUCTOS DENTRO DEL CARRITO --- */
+.item-carrito-modal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+    gap: 10px;
+}
+
+.info-producto-carrito {
+    flex: 2;
+}
+
+.info-producto-carrito h4 {
+    margin: 0 0 5px 0;
+    font-size: 14px;
+    color: #333;
+}
+
+.info-producto-carrito p {
+    margin: 0;
+    font-size: 13px;
+    color: #666;
+}
+
+.controles-carrito {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    justify-content: center;
+}
+
+.controles-carrito button {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 28px;
+    height: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.controles-carrito button:hover {
+    background-color: #e0e0e0;
+}
+
+.btn-eliminar-carrito {
+    background-color: #ffcccc !important;
+    border-color: #ff9999 !important;
+    color: #cc0000;
+}
+
+.btn-eliminar-carrito:hover {
+    background-color: #ff9999 !important;
+}
+
+.subtotal-carrito {
+    flex: 1;
+    text-align: right;
+    font-weight: bold;
+    color: #008A4B;
+}
+
+/* --- PIE DEL MODAL Y BOTÓN WHATSAPP --- */
 .footer-modal {
     border-top: 2px solid #EEEEEE;
     padding-top: 20px;
@@ -402,45 +458,25 @@ footer {
 }
 
 #btn-confirmar-compra {
-    background-color: #E31A1A;
-    color: #FFF;
+    background-color: #25D366; /* Verde de WhatsApp */
+    color: white;
     border: none;
-    padding: 14px 25px;
-    font-size: 17px;
+    padding: 15px 20px;
+    font-size: 16px;
     font-weight: bold;
     border-radius: 8px;
     cursor: pointer;
     width: 100%;
     transition: background-color 0.3s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+#btn-confirmar-compra:before {
+    content: "📱 ";
 }
 
 #btn-confirmar-compra:hover {
-    background-color: #B51212;
-}
-
-.carrito-item {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
-    border-bottom: 1px solid #EEEEEE;
-    padding-bottom: 10px;
-}
-
-.carrito-item-info strong {
-    display: block;
-    margin-bottom: 4px;
-}
-
-.carrito-item-detalles {
-    color: #666666;
-    font-size: 14px;
-}
-
-.carrito-item-subtotal {
-    font-weight: bold;
-    color: #008A4B;
-    font-size: 17px;
-    align-self: center;
+    background-color: #1ebd57;
 }
 
 /* ==========================================================================
@@ -517,7 +553,6 @@ footer {
         height: 190px;
     }
     
-    /* Ajuste para que las redes sociales quepan mejor en el celular */
     .redes-sociales {
         gap: 10px;
     }
@@ -557,24 +592,21 @@ footer {
                salirToast 0.4s ease forwards 2.5s;
 }
 
-/* Animación de entrada (rebote sutil) */
 @keyframes entrarToast {
     from { transform: translateX(120%); }
     to { transform: translateX(0); }
 }
 
-/* Animación de salida (desvanecimiento) */
 @keyframes salirToast {
     from { opacity: 1; transform: translateX(0); }
     to { opacity: 0; transform: translateX(100%); }
 }
 
-/* Ajuste para pantallas pequeñas */
 @media (max-width: 768px) {
     .toast-container {
         bottom: 20px;
         right: 50%;
-        transform: translateX(50%); /* Centrado en móviles */
+        transform: translateX(50%); 
         width: 90%;
     }
     .toast {
