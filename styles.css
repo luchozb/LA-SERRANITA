@@ -202,7 +202,7 @@ section h2::after {
     overflow: hidden;
     padding: 0;
     gap: 0;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .control-cantidad button,
