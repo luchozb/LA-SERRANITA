@@ -50,20 +50,20 @@ productosUI.forEach(producto => {
                 const titulo = producto.querySelector('h3').innerText;
                 const precioTexto = producto.querySelector('.precio').innerText;
                 
-                // --- LA CORRECCIÓN ESTÁ AQUÍ ---
                 // Buscamos específicamente el patrón de un número (con o sin decimales)
                 // Esto ignora el punto engañoso del "S/."
                 const coincidencia = precioTexto.match(/\d+(\.\d+)?/);
                 const precio = coincidencia ? parseFloat(coincidencia[0]) : 0;
-                // -------------------------------
                 
                 procesarCarrito(titulo, precio, cantidadElegida);
                 
                 inputCantidad.value = 0;
                 
-                alert(`¡Agregaste ${cantidadElegida} x ${titulo} al carrito!`);
+                // --- AQUÍ LLAMAMOS A LA NUEVA NOTIFICACIÓN DE ÉXITO ---
+                mostrarNotificacion(`✅ ¡Agregaste ${cantidadElegida} x ${titulo} al carrito!`);
             } else {
-                alert("Por favor, usa el botón '+' para elegir la cantidad antes de agregar.");
+                // --- AQUÍ LLAMAMOS A LA NOTIFICACIÓN DE ADVERTENCIA ---
+                mostrarNotificacion(`⚠️ Usa el botón '+' para elegir la cantidad.`);
             }
         });
     }
@@ -134,3 +134,30 @@ const cerrarVentanaCarrito = () => {
 
 if(btnCerrarModal) btnCerrarModal.addEventListener('click', cerrarVentanaCarrito);
 if(overlayModal) overlayModal.addEventListener('click', cerrarVentanaCarrito);
+
+// ==========================================================
+// 5. NOTIFICACIONES FLOTANTES (TOAST)
+// ==========================================================
+function mostrarNotificacion(mensaje) {
+    // 1. Buscamos si ya existe el contenedor de notificaciones, si no, lo creamos
+    let contenedor = document.getElementById('toast-container');
+    if (!contenedor) {
+        contenedor = document.createElement('div');
+        contenedor.id = 'toast-container';
+        contenedor.className = 'toast-container';
+        document.body.appendChild(contenedor);
+    }
+
+    // 2. Creamos la notificación (toast)
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = mensaje; // El emoji y el texto vienen en la variable 'mensaje'
+
+    // 3. Agregamos el toast al contenedor
+    contenedor.appendChild(toast);
+
+    // 4. Lo eliminamos del código después de 3 segundos (cuando termina la animación)
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
