@@ -20,7 +20,7 @@ body {
 }
 
 /* ==========================================================================
-   2. CABECERA (HEADER) Y NAVEGACIÓN (COMPUTADORAS)
+   2. CABECERA Y NAV
    ========================================================================== */
 header {
     background-color: #FFFFFF;
@@ -29,7 +29,6 @@ header {
     top: 0;
     z-index: 1000;
     padding: 25px 8%; 
-    
     display: grid;
     grid-template-areas: 
         "logo    categorias"
