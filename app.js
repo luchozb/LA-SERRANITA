@@ -1,7 +1,9 @@
 // ==========================================================
 // 1. VARIABLES GLOBALES (El "cerebro" de tu carrito)
 // ==========================================================
-let carrito = [];
+// ✨ NUEVO: En lugar de empezar vacío, primero revisamos si hay algo guardado en el casillero.
+// Si hay algo, lo convertimos a lista (JSON.parse). Si el casillero está vacío, iniciamos un arreglo vacío [].
+let carrito = JSON.parse(localStorage.getItem('carritoLaSerranita')) || [];
 
 // Referencias a la ventana del carrito (Modal)
 const btnAbrirCarrito = document.getElementById('btn-abrir-carrito');
@@ -11,6 +13,11 @@ const btnCerrarModal = document.getElementById('btn-cerrar-modal');
 const listaProductosModal = document.getElementById('lista-productos-modal');
 const totalModal = document.getElementById('total-modal');
 const btnConfirmarCompra = document.getElementById('btn-confirmar-compra'); // Nuevo botón WhatsApp
+
+// ✨ NUEVO: Creamos una función cortita y reutilizable para guardar los cambios en el casillero
+function guardarCarritoEnLocalStorage() {
+    localStorage.setItem('carritoLaSerranita', JSON.stringify(carrito));
+}
 
 // ==========================================================
 // 2. LÓGICA DE LOS BOTONES + / - Y "AGREGAR AL CARRITO" (Página Principal)
@@ -80,6 +87,8 @@ function procesarCarrito(nombre, precio, cantidad) {
         });
     }
 
+    // ✨ NUEVO: Cada vez que procesamos un producto nuevo, actualizamos el casillero
+    guardarCarritoEnLocalStorage();
     actualizarInterfaz();
 }
 
@@ -131,8 +140,12 @@ function asignarEventosModal() {
         boton.addEventListener('click', (e) => {
             const nombre = e.target.getAttribute('data-nombre');
             const producto = carrito.find(item => item.nombre === nombre);
-            if(producto) producto.cantidad++;
-            actualizarInterfaz();
+            if(producto) {
+                producto.cantidad++;
+                // ✨ NUEVO: Guardamos el cambio de cantidad
+                guardarCarritoEnLocalStorage(); 
+                actualizarInterfaz();
+            }
         });
     });
 
@@ -144,6 +157,8 @@ function asignarEventosModal() {
             if(producto) {
                 if (producto.cantidad > 1) {
                     producto.cantidad--;
+                    // ✨ NUEVO: Guardamos el cambio de cantidad
+                    guardarCarritoEnLocalStorage(); 
                     actualizarInterfaz();
                 } else {
                     eliminarDelCarrito(nombre); // Si es 1 y resta, se elimina
@@ -164,6 +179,10 @@ function asignarEventosModal() {
 function eliminarDelCarrito(nombre) {
     // Filtramos dejando todos excepto el que queremos eliminar
     carrito = carrito.filter(item => item.nombre !== nombre);
+    
+    // ✨ NUEVO: Guardamos la lista actualizada (sin el producto eliminado)
+    guardarCarritoEnLocalStorage();
+    
     actualizarInterfaz();
     mostrarNotificacion(`🗑️ Eliminaste ${nombre} del carrito.`);
 }
@@ -187,7 +206,7 @@ if(btnCerrarModal) btnCerrarModal.addEventListener('click', cerrarVentanaCarrito
 if(overlayModal) overlayModal.addEventListener('click', cerrarVentanaCarrito);
 
 // ==========================================================
-// 6. ENVIAR PEDIDO A WHATSAPP (ACTUALIZADO CON TIPO DE ENTREGA)
+// 6. ENVIAR PEDIDO A WHATSAPP
 // ==========================================================
 if(btnConfirmarCompra) {
     btnConfirmarCompra.addEventListener('click', () => {
@@ -220,6 +239,12 @@ if(btnConfirmarCompra) {
         const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
         
         window.open(urlWhatsApp, '_blank');
+        
+        // ✨ Opcional: Si quieres que el carrito se vacíe después de enviar el WhatsApp, puedes descomentar esto:
+        // carrito = [];
+        // guardarCarritoEnLocalStorage();
+        // actualizarInterfaz();
+        // cerrarVentanaCarrito();
     });
 }
 
@@ -245,3 +270,10 @@ function mostrarNotificacion(mensaje) {
         toast.remove();
     }, 3000);
 }
+
+// ==========================================================
+// 8. INICIALIZACIÓN ✨ NUEVO ✨
+// ==========================================================
+// Al cargar la página, obligamos a la interfaz a dibujarse con los datos
+// que hayamos rescatado del LocalStorage en la línea 1.
+actualizarInterfaz();
